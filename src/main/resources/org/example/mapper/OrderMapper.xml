@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.mapper.OrderMapper">
+
+
+    <select id="selectByPageAndCondition" resultType="org.example.pojo.OrderView">
+        select tb_order.id, tb_order.userId, tb_order.productId, tb_order.time, tb_order.address, tb_user.username,
+        tb_user.password, email, tb_product.name, price, description, status
+        from tb_user right join tb_order on tb_user.id=tb_order.userId left join tb_product on
+        tb_order.productId=tb_product.id
+        <where>
+            <if test="username != null and username != '' ">
+                and tb_user.username = #{username}
+            </if>
+        </where>
+        limit #{begin} , #{size}
+    </select>
+
+    <select id="selectTotalCountByCondition" resultType="java.lang.Integer">
+        select count(*)
+        from tb_user right join tb_order on tb_user.id=tb_order.userId left join tb_product on
+        tb_order.productId=tb_product.id
+        <where>
+            <if test="username != null and username != '' ">
+                and tb_user.username = #{username}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectByPageAndMultiCondition" resultType="org.example.pojo.OrderView">
+        select tb_order.id, tb_order.userId, tb_order.productId, tb_order.time, tb_order.address, tb_user.username,
+        tb_user.password, email, tb_product.name, price, description, status
+        from tb_user right join tb_order on tb_user.id=tb_order.userId left join tb_product on
+        tb_order.productId=tb_product.id
+        <where>
+            <!-- 精准匹配-->
+            <if test="orderView.userId != null">
+                and tb_user.id = #{orderView.userId}
+            </if>
+            <if test="orderView.productId != null">
+                and tb_product.id = #{orderView.productId}
+            </if>
+            <if test="orderView.username != null and orderView.username != '' ">
+                and tb_user.username = #{orderView.username}
+            </if>
+
+            <!--            <if test="orderView.time != null and orderView.time != '' ">-->
+            <!--                and tb_order.time = #{orderView.time}-->
+            <!--            </if>-->
+
+            <if test="orderView.status != null">
+                and tb_product.status = #{orderView.status}
+            </if>
+            <if test="orderView.name != null and orderView.name != '' ">
+                and tb_product.name like #{orderView.name}
+            </if>
+            <if test="orderView.description != null and orderView.description != '' ">
+                and tb_product.description like #{orderView.description}
+            </if>
+<!--            <if test="orderView.price != null and orderView.price != '' ">-->
+<!--                and tb_product.price &lt;= #{orderView.price}-->
+<!--            </if>-->
+            <if test="orderView.address != null and orderView.address != '' ">
+                and tb_order.address like #{orderView.address}
+            </if>
+
+        </where>
+        limit #{begin} , #{size}
+    </select>
+
+    <select id="selectTotalCountByMultiCondition" resultType="java.lang.Integer">
+        select count(*)
+        from tb_user right join tb_order on tb_user.id=tb_order.userId left join tb_product on
+        tb_order.productId=tb_product.id
+        <where>
+            <if test="orderView.userId != null">
+                and tb_user.id = #{orderView.userId}
+            </if>
+            <if test="orderView.productId != null">
+                and tb_product.id = #{orderView.productId}
+            </if>
+            <!--            <if test="orderView.time != null and orderView.time != '' ">-->
+            <!--                and tb_order.time = #{orderView.time}-->
+            <!--            </if>-->
+
+            <if test="orderView.address != null and orderView.address != '' ">
+                and tb_order.address like #{orderView.address}
+            </if>
+            <if test="orderView.username != null and orderView.username != '' ">
+                and tb_user.username = #{orderView.username}
+            </if>
+
+            <if test="orderView.name != null and orderView.name != '' ">
+                and tb_product.name like #{orderView.name}
+            </if>
+
+            <!--            <if test="orderView.price != null and orderView.price != '' ">-->
+            <!--                and tb_product.price &lt;= #{orderView.price}-->
+            <!--            </if>-->
+
+            <if test="orderView.description != null and orderView.description != '' ">
+                and tb_product.description like #{orderView.description}
+            </if>
+            <if test="orderView.status != null">
+                and tb_product.status = #{orderView.status}
+            </if>
+
+        </where>
+    </select>
+
+    <select id="selectByMultiCondition" resultType="org.example.pojo.OrderView">
+        select tb_order.id, tb_order.userId, tb_order.productId, tb_order.time, tb_order.address, tb_user.username,
+        tb_user.password, email, tb_product.name, price, description, status
+        from tb_user right join tb_order on tb_user.id=tb_order.userId left join tb_product on
+        tb_order.productId=tb_product.id
+        <where>
+            <!-- 精准匹配-->
+            <if test="orderView.userId != null">
+                and tb_user.id = #{orderView.userId}
+            </if>
+            <if test="orderView.productId != null">
+                and tb_product.id = #{orderView.productId}
+            </if>
+            <if test="orderView.username != null and orderView.username != '' ">
+                and tb_user.username = #{orderView.username}
+            </if>
+
+            <!--            <if test="orderView.time != null and orderView.time != '' ">-->
+            <!--                and tb_order.time = #{orderView.time}-->
+            <!--            </if>-->
+
+            <if test="orderView.status != null">
+                and tb_product.status = #{orderView.status}
+            </if>
+            <if test="orderView.name != null and orderView.name != '' ">
+                and tb_product.name like #{orderView.name}
+            </if>
+            <if test="orderView.description != null and orderView.description != '' ">
+                and tb_product.description like #{orderView.description}
+            </if>
+            <!--            <if test="orderView.price != null and orderView.price != '' ">-->
+            <!--                and tb_product.price &lt;= #{orderView.price}-->
+            <!--            </if>-->
+            <if test="orderView.address != null and orderView.address != '' ">
+                and tb_order.address like #{orderView.address}
+            </if>
+
+        </where>
+    </select>
+
+<!--    <delete id="deleteByIds">-->
+<!--        delete from tb_order where id in-->
+<!--        <foreach collection="ids" item="id" separator="," open="(" close=")">-->
+<!--            #{id}-->
+<!--        </foreach>-->
+<!--    </delete>-->
+
+
+</mapper>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.mapper.ProductMapper">
+
+
+
+
+    <select id="selectByPageAndCondition" resultType="org.example.pojo.Product">
+        select *
+        from tb_product
+        <where>
+            <if test="product.name != null and product.name != '' ">
+                and name like #{product.name}
+            </if>
+            <if test="product.description != null and product.description != '' and product.description == '%全部%'">
+                and true
+            </if>
+            <if test="product.description != null and product.description != '' and product.description != '%全部%'">
+                and description like #{product.description}
+            </if>
+            <if test="product.status != null">
+                and status = #{product.status}
+            </if>
+        </where>
+        limit #{begin} , #{size}
+    </select>
+
+    <select id="selectTotalCountByCondition" resultType="java.lang.Integer">
+        select count(*)
+        from tb_product
+        <where>
+            <if test="name != null and name != '' ">
+                and name like #{name}
+            </if>
+            <if test="description != null and description != '' and description == '%全部%'">
+                and true
+            </if>
+            <if test="description != null and description != '' and description != '%全部%'">
+                and description like #{description}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <!-- 动态SQL语句 -->
+    <delete id="deleteByIds">
+        delete from tb_product where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>user_order</title>
+    <style>
+        .el-row {
+            margin-bottom: 20px;
+
+        }
+
+        .el-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .el-col {
+            border-radius: 4px;
+        }
+
+        .bg-purple-dark {
+            background: #99a9bf;
+        }
+
+        .bg-purple {
+            background: #d3dce6;
+        }
+
+        .bg-purple-light {
+            background: #e5e9f2;
+        }
+
+        .grid-content {
+            border-radius: 4px;
+            min-height: 36px;
+        }
+
+        .row-bg {
+            padding: 10px 0;
+            background-color: #f9fafc;
+        }
+    </style>
+    <!--布局容器-->
+    <style>
+        .el-header, .el-footer {
+            background-color: #B3C0D1;
+            color: #333;
+            text-align: center;
+            line-height: 60px;
+        }
+
+        .el-aside {
+            background-color: #D3DCE6;
+            color: #333;
+            text-align: center;
+            line-height: 200px;
+        }
+
+        .el-main {
+            background-color: #E9EEF3;
+            color: #333;
+            text-align: center;
+            line-height: 20px;
+        }
+
+        body > .el-container {
+            margin-bottom: 40px;
+        }
+
+        .el-container:nth-child(5) .el-aside,
+        .el-container:nth-child(6) .el-aside {
+            line-height: 260px;
+        }
+
+        .el-container:nth-child(7) .el-aside {
+            line-height: 320px;
+        }
+    </style>
+    <!--    页面布局-->
+    <style>
+        .el-header {
+            background-color: #B3C0D1;
+            color: #333;
+            line-height: 60px;
+        }
+
+        .el-aside {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+<div id="user_order">
+
+
+    <el-row :gutter="20">
+        <el-col :span="4" align="middle">
+            <el-button type="danger" icon="el-icon-s-home" @click="home_icon_clicked" circle></el-button>
+            点击返回主页
+        </el-col>
+    </el-row>
+
+    <br>
+    <el-container style="height: auto; border: 1px solid #eee">
+        <el-container>
+            <el-header style="text-align: right; font-size: 12px">
+                <el-row :gutter="20">
+                    <el-col :span="24" style="text-align: center; font-size: xx-large">
+                        我的订单
+                    </el-col>
+                </el-row>
+            </el-header>
+
+            <el-main>
+                <el-row>
+
+                    <el-col :span="20" :offset="2">
+                        <!--搜索表单-->
+                        <el-form :inline="true" :model="orderView" class="demo-form-inline">
+                            <el-form-item label="当前状态">
+                                <el-select style="width:100px" v-model="orderView.status" placeholder="当前状态">
+                                    <el-option label="全部" value=""></el-option>
+                                    <el-option label="在售" value="1"></el-option>
+                                    <el-option label="售空" value="0"></el-option>
+                                </el-select>
+                            </el-form-item>
+
+                            <el-form-item label="书名">
+                                <el-input v-model="orderView.name" placeholder="请输入书名的关键字"></el-input>
+                            </el-form-item>
+
+                            <el-form-item label="描述">
+                                <el-input v-model="orderView.description" placeholder="请输入描述的关键字"></el-input>
+                            </el-form-item>
+
+                            <el-form-item>
+                                <el-button type="primary" icon="el-icon-search" @click="selectByPageAndMultiCondition">
+                                    查询
+                                </el-button>
+                            </el-form-item>
+                        </el-form>
+                    </el-col>
+
+                </el-row>
+                <!--表格-->
+                <template>
+                    <el-table
+                            :data="orderData"
+                            style="width: 100%"
+                            :row-class-name="tableRowClassName"
+                            @selection-change="handleSelectionChange"
+                    >
+
+                        <el-table-column
+                                header-align="center"
+                                align="center"
+                                type="index"
+                                width="50">
+                        </el-table-column>
+
+                        <el-table-column
+                                header-align="center"
+                                align="center"
+                                prop="name"
+                                label="书名"
+                                align="center"
+                        >
+                        </el-table-column>
+                        <el-table-column
+                                header-align="center"
+                                align="center"
+                                prop="price"
+                                align="center"
+                                label="价格">
+                        </el-table-column>
+                        <el-table-column
+                                header-align="center"
+                                align="center"
+                                prop="time"
+                                align="center"
+                                label="时间">
+                        </el-table-column>
+                        <el-table-column
+                                header-align="center"
+                                align="center"
+                                prop="address"
+                                label="地址"
+                                align="center"
+                        >
+                        </el-table-column>
+
+                    </el-table>
+                </template>
+
+
+            </el-main>
+            <div style="text-align: center; background-color: rgb(234,238,243)">
+                <el-pagination
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        :current-page="currentPage"
+                        :page-sizes="[20, 40]"
+                        :page-size="pageSize"
+                        layout="total, sizes, prev, pager, next, jumper"
+                        :total="totalCount">
+                </el-pagination>
+                <br>
+            </div>
+        </el-container>
+    </el-container>
+
+
+</div>
+
+<script src="js/vue.js"></script>
+<script src="element-ui/lib/index.js"></script>
+<link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+<script src="js/axios-0.18.0.js"></script>
+
+<!--页面布局-->
+
+<script>
+
+
+    new Vue({
+        el: "#user_order",
+        mounted() {
+            this.selectAll();
+        },
+
+        methods: {
+
+            //element图片标签必须加这个click方法
+            cancelStyle() {
+                document.body.style = null
+            },
+
+            // 查询订单数据
+            selectAll() {
+                // 按条件分页查询
+                console.log("selectAll is called");
+                axios({
+                    method: "post",
+                    url: "order/selectByPageAndUser?currentPage=" + this.currentPage + "&pageSize=" + this.pageSize,
+                    data: this.user
+                }).then(resp => {
+                    //设置表格数据
+                    this.orderData = resp.data.rows;
+                    this.orderDataSize = this.orderData.length;
+                    console.log(this.orderDataSize);
+                    //设置总记录数
+                    this.totalCount = resp.data.totalCount;
+                    console.log(document.cookie);
+                })
+
+            },
+
+            home_icon_clicked() {
+                window.location.href = "homepage.html";
+            },
+
+
+            tableRowClassName({row, rowIndex}) {
+                if (rowIndex % 2 === 0) {
+                    return 'warning-row';
+                } else {
+                    return 'success-row';
+                }
+            },
+            // 复选框选中后执行的方法
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+                console.log(this.multipleSelection)
+            },
+            // 查询方法
+            selectByPageAndMultiCondition() {
+                console.log("selectByPageAndMultiCondition is called");
+                this.orderView.userId = 0;
+                // this.orderView.userId=
+                // 订单查看
+                axios({
+                    method: "post",
+                    url: "order/selectByPageAndMultiCondition?currentPage=" + this.currentPage + "&pageSize=" + this.pageSize,
+                    data: this.orderView
+                }).then(resp => {
+                    //设置表格数据
+                    this.orderData = resp.data.rows;
+                    this.orderDataSize = this.orderData.length;
+                    console.log(this.orderView);
+                    console.log(this.orderDataSize);
+                    //设置总记录数
+                    this.totalCount = resp.data.totalCount;
+
+                })
+                // this.selectAll();
+            },
+            //分页
+            handleSizeChange(val) {
+                console.log(`每页 ${val} 条`);
+                // 重新设置每页显示的条数
+                this.pageSize = val;
+                this.selectAll();
+            },
+
+            handleCurrentChange(val) {
+                console.log(`当前页: ${val}`);
+                // 重新设置当前页码
+                this.currentPage = val;
+                this.selectAll();
+            },
+
+
+
+        },
+
+        data() {
+
+            return {
+
+
+                orderData: [],
+                orderDataSize: 4,
+
+                //用户模型数据
+                user: {
+                    id: "",
+                    username: "",
+                    password: "",
+                    email: ""
+                },
+
+                // 产品模型数据
+                product: {
+                    id: "",
+                    name: "",
+                    price: "",
+                    description: "",
+                    status: ""
+                },
+                orderView: {
+                    id: "",
+                    userId: "",
+                    productId: "",
+                    time: "",
+                    address: "",
+                    username: "",
+                    password: "",
+                    email: "",
+                    name: "",
+                    price: "",
+                    description: "",
+                    status: ""
+                },
+
+                loginStatus: true,
+                // 每页显示的条数
+                pageSize: 20,
+                // 总记录数
+                totalCount: 100,
+                // 当前页码
+                currentPage: 1,
+
+            }
+        }
+    })
+</script>
+
+</body>
+</html>

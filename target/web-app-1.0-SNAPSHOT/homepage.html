@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>homepage</title>
+    <!--分栏-->
+
+    <!--卡片-->
+    <style>
+        .time {
+            font-size: 13px;
+            color: #999;
+        }
+
+        .bottom {
+            margin-top: 13px;
+            line-height: 12px;
+        }
+
+        .button {
+            font-size: 13px;
+            padding: 0;
+            float: left;
+        }
+
+        .image {
+            width: 100%;
+            display: block;
+        }
+
+        .clearfix:before,
+        .clearfix:after {
+            display: table;
+            content: "";
+        }
+
+        .clearfix:after {
+            clear: both
+        }
+    </style>
+    <!--布局容器-->
+    <style>
+        .el-header, .el-footer {
+            background-color: #B3C0D1;
+            color: #333;
+            text-align: center;
+            line-height: 60px;
+        }
+
+        .el-aside {
+            background-color: #D3DCE6;
+            color: #333;
+            text-align: center;
+            line-height: 200px;
+        }
+
+        .el-main {
+            background-color: #E9EEF3;
+            color: #333;
+            text-align: center;
+            line-height: 20px;
+        }
+
+        body > .el-container {
+            margin-bottom: 40px;
+        }
+
+        .el-container:nth-child(5) .el-aside,
+        .el-container:nth-child(6) .el-aside {
+            line-height: 260px;
+        }
+
+        .el-container:nth-child(7) .el-aside {
+            line-height: 320px;
+        }
+    </style>
+    <!--走马灯-->
+    <style>
+        .el-carousel__item h3 {
+            color: #475669;
+            font-size: 14px;
+            opacity: 0.75;
+            line-height: 200px;
+            margin: 0;
+        }
+
+        .el-carousel__item:nth-child(2n) {
+            background-color: #99a9bf;
+        }
+
+        .el-carousel__item:nth-child(2n+1) {
+            background-color: #d3dce6;
+        }
+    </style>
+    <!--    页面布局-->
+    <style>
+        .el-header {
+            background-color: #B3C0D1;
+            color: #333;
+            line-height: 60px;
+        }
+
+        .el-aside {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+<div id="homepage" style="overflow-x: hidden">
+
+    <!--头像-->
+    <el-row :gutter="20">
+        <el-col :span="10" :offset="2">
+            <el-button type="danger" icon="el-icon-user" @click="user_icon_clicked" circle></el-button>
+            {{loginStatus?"已登录，查看用户信息":"未登录，请点击登录"}}
+        </el-col>
+        <el-col :span="5" :offset="7">
+            <el-row>
+                <el-button type="danger" icon="el-icon-shopping-cart-2"
+                           @click="cart_icon_clicked" round>购物车
+                </el-button>
+                <el-button type="info" icon="el-icon-s-order"
+                           @click="order_icon_clicked" round>我的订单
+                </el-button>
+            </el-row>
+        </el-col>
+    </el-row>
+    <br>
+    <br>
+
+    <!--登录对话框表单-->
+    <el-dialog
+            title="登录"
+            :visible.sync="loginDialogVisible"
+            width="30%"
+    >
+        <el-form ref="form" :model="user" label-width="100px">
+            <el-form-item label="用户名">
+                <el-input maxlength="20" placeholder="请输入用户名" v-model="user.username"></el-input>
+            </el-form-item>
+
+            <el-form-item label="密码">
+                <el-input maxlength="20" placeholder="请输入密码" v-model="user.password" show-password></el-input>
+            </el-form-item>
+
+            <el-form-item>
+                <el-button type="primary" @click="userLogin">登录</el-button>
+                <el-button @click="loginDialogVisible = false">取消</el-button>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="text" @click="registerDialogVisible = true">没有账号？点击注册</el-button>
+            </el-form-item>
+
+        </el-form>
+    </el-dialog>
+
+    <!--注册对话框表单-->
+    <el-dialog
+            title="欢迎新用户注册"
+            :visible.sync="registerDialogVisible"
+            width="30%"
+    >
+        <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+
+            <el-form-item label="用户名" prop="uname">
+                <el-input maxlength="20" placeholder="请输入用户名" v-model="ruleForm.uname"></el-input>
+            </el-form-item>
+
+            <el-form-item label="密码" prop="pass">
+                <el-input maxlength="20" type="password" v-model="ruleForm.pass" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="确认密码" prop="checkPass">
+                <el-input maxlength="20" type="password" v-model="ruleForm.checkPass" autocomplete="off"></el-input>
+            </el-form-item>
+
+            <el-form-item label="邮箱" prop="email">
+                <el-input maxlength="20" placeholder="请输入邮箱" v-model="ruleForm.email"></el-input>
+            </el-form-item>
+
+            <el-form-item>
+                <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
+                <el-button @click="resetForm('ruleForm')">重置</el-button>
+            </el-form-item>
+        </el-form>
+    </el-dialog>
+
+
+    <!--用户信息对话框表单-->
+    <el-dialog
+            title="用户信息"
+            :visible.sync="userinfoDialogVisible"
+            width="30%"
+    >
+        <el-form ref="form" :model="user" label-width="100px">
+            <el-form-item>
+                <span>用户名: {{user.username}}</span>
+            </el-form-item>
+            <el-form-item>
+                <span>邮箱: {{user.email}}</span>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="warning" @click="userLogout">注销</el-button>
+                <el-button @click="userinfoDialogVisible = false">取消</el-button>
+            </el-form-item>
+        </el-form>
+    </el-dialog>
+
+
+    <!--走马灯-->
+    <el-row :gutter="20">
+        <!--走马灯-->
+        <template>
+            <el-carousel :interval="4000" type="card" height="335px">
+                <el-carousel-item v-for="item in adData" :key="item">
+                    <el-image @click="cancelStyle()"
+                              :src="item" style="width: 850px; height: 335px">
+                    </el-image>
+                    <h3 class="medium">{{ item }}</h3>
+                </el-carousel-item>
+            </el-carousel>
+        </template>
+    </el-row>
+    <br>
+
+    <!--搜索框-->
+    <el-row :gutter="20">
+        <el-col :span="20" v-for="(o, index) in 1" :key="o" :offset="index > 0 ? 0 : 5">
+            <!--搜索表单-->
+            <el-form :inline="true" :model="product" class="demo-form-inline">
+
+                <el-form-item label="当前状态">
+                    <el-select v-model="product.status" placeholder="当前状态">
+                        <el-option label="全部" value=""></el-option>
+                        <el-option label="在售" value="1"></el-option>
+                        <el-option label="售空" value="0"></el-option>
+                    </el-select>
+                </el-form-item>
+
+                <el-form-item label="书名">
+                    <el-input maxlength="20" v-model="product.name" placeholder="请输入书名的关键字"></el-input>
+                </el-form-item>
+
+                <el-form-item label="描述">
+                    <el-input maxlength="20" v-model="product.description" placeholder="请输入描述的关键字"></el-input>
+                </el-form-item>
+
+                <el-form-item>
+                    <el-button type="primary" icon="el-icon-search" @click="onSubmit">查询</el-button>
+                </el-form-item>
+            </el-form>
+
+        </el-col>
+    </el-row>
+    <br>
+
+
+    <!--布局容器-->
+    <el-container style="height: auto; border: 1px solid #eee">
+        <el-aside width=15% style="background-color: rgb(238, 241, 246)">
+            <el-menu>
+                <el-menu-item @click="selectByBookClass('')">全部</el-menu-item>
+                <el-menu-item @click="selectByBookClass('文学')">文学</el-menu-item>
+                <el-menu-item @click="selectByBookClass('小说')">小说</el-menu-item>
+                <el-menu-item @click="selectByBookClass('历史文化')">历史文化</el-menu-item>
+                <el-menu-item @click="selectByBookClass('社会纪实')">社会纪实</el-menu-item>
+                <el-menu-item @click="selectByBookClass('科学新知')">科学新知</el-menu-item>
+                <el-menu-item @click="selectByBookClass('艺术设计')">艺术设计</el-menu-item>
+                <el-menu-item @click="selectByBookClass('商业经管')">商业经管</el-menu-item>
+                <el-menu-item @click="selectByBookClass('绘本漫画')">绘本漫画</el-menu-item>
+
+            </el-menu>
+        </el-aside>
+
+        <el-container>
+            <el-header style="text-align: right; font-size: 12px">
+
+            </el-header>
+
+            <el-main>
+
+                <template>
+
+                    <el-table
+                            :data="productData"
+                            stripe
+                            style="width: 100%">
+
+
+                        <el-table-column
+                                header-align="center"
+                                align="center"
+                                label="封面"
+                                width="200">
+                            <template slot-scope="scope">
+                                <el-image @click="cancelStyle()" fit="scale-down"
+                                          :src="scope.row.coverDir" style="width: 160px; height: 200px">
+                                </el-image>
+
+                            </template>
+                        </el-table-column>
+
+                        <el-table-column
+                                header-align="center"
+                                align="center"
+                                prop="name"
+                                label="书名"
+                                width="180">
+                        </el-table-column>
+                        <el-table-column
+                                header-align="center"
+                                align="center"
+                                prop="description"
+                                label="简介"
+                                width="300">
+                        </el-table-column>
+                        <el-table-column
+                                header-align="center"
+                                align="center"
+                                prop="price"
+                                label="价格"
+                                width="100">
+                        </el-table-column>
+                        <el-table-column
+                                header-align="center"
+                                align="center"
+                                prop="statusStr"
+                                label="状态"
+                        >
+                        </el-table-column>
+                        <el-table-column
+                                align="center"
+                                label="操作">
+                            <template slot-scope="scope">
+                                <el-row>
+                                    <el-button type="primary" @click="addCart(scope.row)">加购</el-button>
+                                </el-row>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </template>
+
+
+            </el-main>
+            <div style="text-align: center; background-color: rgb(234,238,243)">
+                <el-pagination
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        :current-page="currentPage"
+                        :page-sizes="[6, 12, 18]"
+                        :page-size="pageSize"
+                        layout="total, sizes, prev, pager, next, jumper"
+                        :total="totalCount">
+                </el-pagination>
+                <br>
+            </div>
+        </el-container>
+    </el-container>
+    <br>
+    <br>
+
+
+</div>
+
+<script src="js/vue.js"></script>
+<script src="element-ui/lib/index.js"></script>
+<link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+<script src="js/axios-0.18.0.js"></script>
+
+<!--页面布局-->
+
+<script>
+    new Vue({
+        el: "#homepage",
+        mounted() {
+            //当页面加载完成后，发送异步请求，获取数据
+            this.product.description = '';
+            this.product.name = '';
+            this.product.status = '';
+            this.getLoginStatus();
+            console.log(this.product);
+            this.selectAll();
+
+        },
+
+        methods: {
+
+            // 添加购物车
+            addCart(row) {
+                console.log("addCart");
+                this.productId = row.id;
+                console.log(this.productId);
+                axios({
+                    method: "post",
+                    url: "cart/add",
+                    data: this.productId
+                }).then(resp => {
+                    if (resp.data == "success") {
+                        //添加成功
+                        //关闭窗口
+
+                        this.productId = 0;
+                        // 重新查询数据
+                        this.selectAll();
+                        // 弹出消息提示
+                        this.$message({
+                            message: '添加成功',
+                            type: 'success'
+                        });
+
+                    } else {
+                        this.$message({
+                            message: '添加失败，请登录',
+                            type: 'error'
+                        });
+                    }
+
+                })
+
+            },
+
+            getLoginStatus() {
+                axios({
+                    method: "post",
+                    url: "user/getLoginStatus",
+                    data: this.user,
+                }).then(resp => {
+                    this.userDate = [];
+                    this.userDate.push(resp.data);
+                    console.log(this.userDate);
+                    if (this.userDate.length !== 0 && this.userDate[0] != null && this.userDate[0] !== "") {
+                        this.user = resp.data;
+                        this.loginStatus = true;
+                    } else {
+                        this.loginStatus = false;
+                    }
+
+                })
+            },
+
+
+            openMsg(msg) {
+                this.$message({
+                    showClose: true,
+                    message: msg
+                });
+            },
+
+            openSuccessMsg(msg) {
+                this.$message({
+                    showClose: true,
+                    message: msg,
+                    type: 'success'
+                });
+            },
+
+            openWarningMsg(msg) {
+                this.$message({
+                    showClose: true,
+                    message: msg,
+                    type: 'warning'
+                });
+            },
+
+            openErrorMsg(msg) {
+                this.$message({
+                    showClose: true,
+                    message: msg,
+                    type: 'error'
+                });
+            },
+
+            cancelStyle() {
+                document.body.style = null
+            },
+
+            submitForm(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        this.user.username=this.ruleForm.uname;
+                        this.user.password=this.ruleForm.pass;
+                        this.user.email=this.ruleForm.email;
+
+                        axios({
+                            method: "post",
+                            url: "user/add",
+                            data: this.user,
+                        }).then(resp => {
+                            if (resp.data === "success") {
+                                //注册成功
+                                // 重新查询数据
+                                this.registerDialogVisible = false;
+                                this.selectAll();
+                                // 弹出消息提示
+                                this.$message({
+                                    message: '恭喜你，注册成功',
+                                    type: 'success'
+                                });
+
+                            }
+                        })
+
+                    } else {
+                        console.log('error submit!!');
+                        return false;
+                    }
+                });
+            },
+
+
+
+            resetForm(formName) {
+                this.$refs[formName].resetFields();
+            },
+
+            //点击用户按钮
+            user_icon_clicked() {
+                if (this.loginStatus) {
+
+                    this.userinfoDialogVisible = true;
+                } else {
+                    this.loginDialogVisible = true;
+                }
+            },
+
+            //用户点击购物车按钮
+            cart_icon_clicked() {
+                if (this.loginStatus) {
+                    window.location.href = "user_cart.html";
+                } else {
+                    this.loginDialogVisible = true;
+                }
+            },
+
+            // 用户点击订单按钮
+            order_icon_clicked() {
+                if (this.loginStatus) {
+                    window.location.href = "user_order.html";
+                } else {
+                    this.loginDialogVisible = true;
+                }
+            },
+
+            // 用户点击登录按钮
+            userLogin() {
+                axios({
+                    method: "post",
+                    url: "user/selectUser",
+                    data: this.user,
+                }).then(resp => {
+                    this.userDate = [];
+                    this.userDate.push(resp.data);
+                    if (this.userDate.length !== 0 && this.userDate[0] != null) {
+                        this.openSuccessMsg("登陆成功");
+                        this.user = resp.data;
+                        this.loginStatus = true;
+                        this.loginDialogVisible = false;
+                    } else {
+                        this.openErrorMsg("账号或密码错误");
+                    }
+                })
+            },
+
+            // 点击注销按钮
+            userLogout() {
+                this.loginStatus = false;
+                this.userinfoDialogVisible = false;
+            },
+
+            // 用户点击注册按钮
+            userRegister() {
+                this.registerDialogVisible = true;
+            },
+
+            // 查询用户名是否存在
+            selectByUsername() {
+                var _this = this;
+                axios({
+                    method: "post",
+                    url: "user/selectByUsername",
+                    data: this.user
+                }).then(function (resp) {
+                    _this.userDate = [];
+                    _this.userDate.push(resp.data);
+                    // console.log(_this.userDate);
+                })
+            },
+
+            // 分类查询图书
+            selectByBookClass(bookClass) {
+                console.log(bookClass)
+                this.product.description = bookClass;
+                this.product.name = '';
+                this.product.status = '';
+                console.log(this.product);
+                this.selectAll();
+            },
+
+            // 查询产品数据
+            selectAll() {
+                // 按条件分页查询
+                axios({
+                    method: "post",
+                    url: "product/selectByPageAndCondition?currentPage=" + this.currentPage + "&pageSize=" + this.pageSize,
+                    data: this.product
+                }).then(resp => {
+                    //设置表格数据
+                    this.productData = resp.data.rows; // {rows:[],totalCount:100}
+
+                    this.productDataSize = this.productData.length;
+                    console.log(this.productDataSize);
+                    //设置总记录数
+                    this.totalCount = resp.data.totalCount;
+                })
+
+            },
+
+            // 复选框选中后执行的方法
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+                console.log(this.multipleSelection)
+            },
+            // 查询方法
+            onSubmit() {
+                console.log(this.product);
+                this.selectAll();
+            },
+            //分页
+            handleSizeChange(val) {
+                console.log(`每页 ${val} 条`);
+                // 重新设置每页显示的条数
+                this.pageSize = val;
+                this.selectAll();
+            },
+
+            handleCurrentChange(val) {
+                console.log(`当前页: ${val}`);
+                // 重新设置当前页码
+                this.currentPage = val;
+                this.selectAll();
+            }
+
+        },
+
+        data() {
+            var checkName = (rule, value, callback) => {
+                console.log("ok1");
+                if (!value) {
+                    return callback(new Error('用户名不能为空'));
+                }
+                this.user.username = value;
+                console.log(this.user.username);
+                this.selectByUsername();
+                setTimeout(() => {
+                    console.log("this.userDate.length " + this.userDate.length);
+                    if (this.userDate.length !== 0 && this.userDate[0] != null) {
+                        callback(new Error('该用户名已存在'));
+                    } else {
+                        callback();
+                    }
+                }, 1000);
+            };
+            var validatePass = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('请输入密码'));
+                } else {
+                    if (this.ruleForm.checkPass !== '') {
+                        this.$refs.ruleForm.validateField('checkPass');
+                    }
+                    callback();
+                }
+            };
+            var validatePass2 = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('请再次输入密码'));
+                } else if (value !== this.ruleForm.pass) {
+                    callback(new Error('两次输入密码不一致!'));
+                } else {
+                    callback();
+                }
+            };
+            return {
+                ruleForm: {
+                    uname: '',
+                    pass: '',
+                    checkPass: '',
+                    email: '',
+                },
+                rules: {
+                    uname: [
+                        {validator: checkName, trigger: 'blur'}
+                    ],
+                    pass: [
+                        {validator: validatePass, trigger: 'blur'}
+                    ],
+                    checkPass: [
+                        {validator: validatePass2, trigger: 'blur'}
+                    ],
+
+                },
+
+                //用户模型数据
+                user: {
+                    id: "",
+                    username: "",
+                    password: "",
+                    email: ""
+                },
+
+                // 产品模型数据
+                product: {
+                    id: "",
+                    name: "",
+                    price: "",
+                    description: "",
+                    status: ""
+                },
+
+                // tableData: Array(20).fill(item),
+
+                loginStatus: false,
+                // 每页显示的条数
+                pageSize: 6,
+                // 总记录数
+                totalCount: 100,
+                // 当前页码
+                currentPage: 1,
+                // 对话框是否展示的标记
+                addDialogVisible: false,
+                loginDialogVisible: false,
+                registerDialogVisible: false,
+                userinfoDialogVisible: false,
+
+                productData: [],
+                productDataSize: 6,
+                tableData: [],
+                userDate: [],
+                adData: ["ad_img/index_ad0.jpg",
+                    "ad_img/index_ad1.jpg",
+                    "ad_img/index_ad2.jpg",
+                    "ad_img/index_ad3.jpg",
+                    "ad_img/index_ad4.jpg",
+                    "ad_img/index_ad5.jpg"],
+                adDataSize: 6,
+                productId: 0,
+            }
+        }
+    })
+    // document.getElementById(“img”).src(属性名)
+</script>
+
+</body>
+</html>

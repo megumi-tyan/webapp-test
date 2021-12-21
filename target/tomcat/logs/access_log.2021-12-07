@@ -1,0 +1,16 @@
+0:0:0:0:0:0:0:1 - - [07/Dec/2021:03:31:47 +0800] "GET /web-app HTTP/1.1" 302 - http-bio-8080-exec-1 0
+0:0:0:0:0:0:0:1 - - [07/Dec/2021:03:31:47 +0800] "GET /web-app/ HTTP/1.1" 404 967 http-bio-8080-exec-3 9
+0:0:0:0:0:0:0:1 - - [07/Dec/2021:03:31:56 +0800] "GET /web-app/homepage HTTP/1.1" 404 983 http-bio-8080-exec-4 1
+0:0:0:0:0:0:0:1 - - [07/Dec/2021:03:31:59 +0800] "GET /web-app/homepage HTTP/1.1" 404 983 http-bio-8080-exec-5 0
+0:0:0:0:0:0:0:1 - - [07/Dec/2021:12:50:41 +0800] "GET /web-app HTTP/1.1" 302 - http-bio-8080-exec-1 0
+0:0:0:0:0:0:0:1 - - [07/Dec/2021:12:50:41 +0800] "GET /web-app/ HTTP/1.1" 404 967 http-bio-8080-exec-3 9
+0:0:0:0:0:0:0:1 - - [07/Dec/2021:12:50:41 +0800] "GET /favicon.ico HTTP/1.1" 404 - http-bio-8080-exec-4 0
+0:0:0:0:0:0:0:1 - - [07/Dec/2021:12:50:50 +0800] "GET /web-app/homepage HTTP/1.1" 404 983 http-bio-8080-exec-5 1
+0:0:0:0:0:0:0:1 - - [07/Dec/2021:12:51:21 +0800] "GET /web-app/homepage.ht,l HTTP/1.1" 404 993 http-bio-8080-exec-6 1
+0:0:0:0:0:0:0:1 - - [07/Dec/2021:12:51:27 +0800] "GET /web-app/homepage.html HTTP/1.1" 200 21279 http-bio-8080-exec-7 3
+0:0:0:0:0:0:0:1 - - [07/Dec/2021:12:51:27 +0800] "GET /web-app/js/vue.js HTTP/1.1" 200 341462 http-bio-8080-exec-8 3
+0:0:0:0:0:0:0:1 - - [07/Dec/2021:12:51:27 +0800] "GET /web-app/js/axios-0.18.0.js HTTP/1.1" 200 12948 http-bio-8080-exec-10 2
+0:0:0:0:0:0:0:1 - - [07/Dec/2021:12:51:27 +0800] "GET /web-app/element-ui/lib/theme-chalk/index.css HTTP/1.1" 200 232460 http-bio-8080-exec-2 3
+0:0:0:0:0:0:0:1 - - [07/Dec/2021:12:51:27 +0800] "GET /web-app/element-ui/lib/index.js HTTP/1.1" 200 567058 http-bio-8080-exec-9 6
+0:0:0:0:0:0:0:1 - - [07/Dec/2021:12:51:27 +0800] "GET /web-app/element-ui/lib/theme-chalk/fonts/element-icons.woff HTTP/1.1" 200 28200 http-bio-8080-exec-9 2
+0:0:0:0:0:0:0:1 - - [07/Dec/2021:12:53:35 +0800] "OPTIONS /brand-case/brand/selectByPageAndCondition?currentPage=1&pageSize=5 HTTP/1.1" 404 - http-bio-8080-exec-6 0

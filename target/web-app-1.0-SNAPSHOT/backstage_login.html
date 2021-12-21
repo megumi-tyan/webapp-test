@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>user_order</title>
+    <!--    卡片-->
+    <style>
+        .text {
+            font-size: 14px;
+        }
+
+        .item {
+            margin-bottom: 18px;
+        }
+
+        .clearfix:before,
+        .clearfix:after {
+            display: table;
+            content: "";
+        }
+
+        .clearfix:after {
+            clear: both
+        }
+
+        .box-card {
+            width: 480px;
+        }
+    </style>
+
+    <style>
+        .el-row {
+            margin-bottom: 20px;
+
+        }
+
+        .el-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .el-col {
+            border-radius: 4px;
+        }
+
+        .bg-purple-dark {
+            background: #99a9bf;
+        }
+
+        .bg-purple {
+            background: #d3dce6;
+        }
+
+        .bg-purple-light {
+            background: #e5e9f2;
+        }
+
+        .grid-content {
+            border-radius: 4px;
+            min-height: 36px;
+        }
+
+        .row-bg {
+            padding: 10px 0;
+            background-color: #f9fafc;
+        }
+    </style>
+    <!--布局容器-->
+    <style>
+        .el-header, .el-footer {
+            background-color: #B3C0D1;
+            color: #333;
+            text-align: center;
+            line-height: 60px;
+        }
+
+        .el-aside {
+            background-color: #D3DCE6;
+            color: #333;
+            text-align: center;
+            line-height: 200px;
+        }
+
+        .el-main {
+            background-color: #E9EEF3;
+            color: #333;
+            text-align: center;
+            line-height: 20px;
+        }
+
+        body > .el-container {
+            margin-bottom: 40px;
+        }
+
+        .el-container:nth-child(5) .el-aside,
+        .el-container:nth-child(6) .el-aside {
+            line-height: 260px;
+        }
+
+        .el-container:nth-child(7) .el-aside {
+            line-height: 320px;
+        }
+    </style>
+    <!--    页面布局-->
+    <style>
+        .el-header {
+            background-color: #B3C0D1;
+            color: #333;
+            line-height: 60px;
+        }
+
+        .el-aside {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+<div id="backstage_login">
+
+
+    <br>
+    <br>
+
+    <!--布局容器-->
+    <el-container style="height: 600px; border: 1px solid #eee">
+
+        <el-container>
+            <el-header style="text-align: right; font-size: 12px">
+
+            </el-header>
+
+            <el-main style="align: center">
+                <el-row :gutter="20">
+                    <el-col :span="12" style="text-align: center; font-size: large" :offset="7">
+                        <el-card class="box-card">
+                            <div slot="header" class="clearfix">
+                                <span>后台登录</span>
+                            </div>
+                            <el-form ref="admin" :model="admin" label-width="80px">
+                                <el-form-item label="账号">
+                                    <el-input v-model="admin.name"></el-input>
+                                </el-form-item>
+                                <el-form-item label="密码">
+                                    <el-input v-model="admin.password" show-password></el-input>
+                                </el-form-item>
+
+
+                                <el-row :gutter="20">
+                                    <el-col :span="20" style="text-align: center; font-size: large">
+                                        <el-form-item>
+                                            <el-button type="primary" @click="onSubmit">登录</el-button>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+
+                            </el-form>
+                        </el-card>
+                    </el-col>
+                </el-row>
+
+
+            </el-main>
+            <el-footer style="text-align: right; font-size: 12px">
+
+
+            </el-footer>
+        </el-container>
+
+    </el-container>
+    <br>
+    <br>
+
+
+</div>
+
+
+</el-main>
+
+</el-container>
+</el-container>
+<br>
+<br>
+
+
+</div>
+
+<script src="js/vue.js"></script>
+<script src="element-ui/lib/index.js"></script>
+<link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+<script src="js/axios-0.18.0.js"></script>
+
+<!--页面布局-->
+
+<script>
+
+
+    new Vue({
+        el: "#backstage_login",
+        // mounted() {
+        //
+        // },
+
+        methods: {
+
+            //element图片标签必须加这个click方法
+            cancelStyle() {
+                document.body.style = null
+            },
+            //提交表单
+            onSubmit() {
+                console.log('submit!');
+
+                axios({
+                    method: "post",
+                    url: "backstageLoginServlet",
+                    data: this.admin
+                }).then(resp => {
+
+                    if (resp.data === "success") {
+                        //添加成功
+                        //关闭窗口
+                        window.location.href = "backstage.html";
+                        // 弹出消息提示
+                        this.$message({
+                            message: '登录成功',
+                            type: 'success'
+                        });
+                    }
+                    else {
+                        this.$message({
+                            message: '账号或密码错误！',
+                            type: 'error'
+                        });
+                    }
+                })
+            }
+
+        },
+
+        data() {
+
+            return {
+
+                admin: {
+                    name: '',
+                    password: '',
+                }
+
+            }
+        }
+    })
+</script>
+
+</body>
+</html>
